@@ -1,6 +1,8 @@
 import model.*
-import model.visitors.*
+import visitors.*
 import org.junit.jupiter.api.Test
+import visitors.ObjectValidator
+import visitors.UniformArrayTypeValidator
 import kotlin.test.*
 
 class JsonVisitorsTest {

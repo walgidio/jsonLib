@@ -1,5 +1,5 @@
 package model
-import model.visitors.*
+import visitors.*
 
 /**
  * Represents a JSON object (collection of key-value pairs).

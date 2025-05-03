@@ -16,7 +16,7 @@ class JsonArrayTest {
             JsonString("a"),
             JsonNumber(1)
         ))
-        assertEquals("""["a", 1]""", arr.toJsonString())
+        assertEquals("""["a",1]""", arr.toJsonString())
     }
 
     @Test

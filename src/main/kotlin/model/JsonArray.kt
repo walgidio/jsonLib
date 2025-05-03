@@ -1,5 +1,5 @@
 package model
-import model.visitors.*
+import visitors.*
 
 /**
  * Represents a JSON array (ordered collection of values).
@@ -27,7 +27,7 @@ data class JsonArray(val elements: List<JsonValue> = emptyList()) : JsonValue {
      * @return A valid JSON array string representation
      */
     override fun toJsonString(): String {
-        return "[${elements.joinToString(", ") { it.toJsonString() }}]"
+        return "[${elements.joinToString(",") { it.toJsonString() }}]"
     }
 
     /**

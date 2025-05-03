@@ -1,4 +1,4 @@
-package model.visitors
+package visitors
 import model.*
 /**
  * Visitor interface for processing JSON structures.

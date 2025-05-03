@@ -1,5 +1,6 @@
 package model
-import model.visitors.*
+import visitors.*
+
 /**
  * This sealed interface serves as the foundation for the JSON data model and enables:
  * - Type-safe handling of all JSON value types

@@ -1,5 +1,5 @@
 package model
-import model.visitors.*
+import visitors.*
 
 /**
  * Represents a JSON string value.
