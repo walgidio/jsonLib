@@ -26,6 +26,7 @@ class JsonArrayTest {
             JsonNumber(2)
         ))
         val filtered = arr.filter { it is JsonNumber && it.value.toInt() > 1 }
+
         assertEquals("[2]", filtered.toJsonString())
     }
 

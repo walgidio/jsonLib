@@ -62,5 +62,5 @@ data class JsonArray(val elements: List<JsonValue> = emptyList()) : JsonValue {
     /**
      * Returns the number of elements in the array.
      */
-    val size: Int get() = elements.size
+    val length: Int get() = elements.size
 }

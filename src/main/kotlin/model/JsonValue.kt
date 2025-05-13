@@ -7,7 +7,7 @@ import visitors.*
  * - Visitor pattern implementation for traversing JSON structures
  * - Serialization to standard JSON string format
  */
-sealed interface JsonValue {
+interface JsonValue {
     /**
      * Accepts a [JsonVisitor] to process this JSON value.
      *
