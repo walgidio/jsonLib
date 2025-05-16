@@ -1,5 +1,8 @@
 import model.*
-import visitors.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KParameter
+import kotlin.reflect.KProperty
+import kotlin.reflect.full.declaredMemberProperties
 
 import kotlin.reflect.full.primaryConstructor
 
@@ -22,7 +25,7 @@ object JsonInfer {
      *
      * @param source The object to convert, can be null
      * @return JsonValue representing the converted object
-     * @throws IllegalArgumentException if unsupported types are encountered
+     * @throws IllegalArgumentException if unsupported types are found
      */
     fun from(source: Any?): JsonValue {
         return when (source) {
@@ -63,7 +66,6 @@ object JsonInfer {
         return if (map.keys.all { it is String }) {
             JsonObject(map.mapKeys { it.key as String }.mapValues { from(it.value) })
         } else {
-            // Fallback for non-String key maps
             JsonArray(map.entries.map { from(it.toPair()) })
         }
     }
@@ -75,9 +77,9 @@ object JsonInfer {
     private fun convertDataClass(obj: Any): JsonObject {
         require(obj::class.isData) { "Only data classes are supported for automatic conversion" }
 
-        val properties = obj::class.primaryConstructor!!
-            .parameters
-            .associate { param ->
+        val properties = obj::class.primaryConstructor
+            ?.parameters
+            ?.associate { param ->
                 val name = param.name!!
                 name to from(obj::class.members.first { it.name == name }.call(obj))
             }

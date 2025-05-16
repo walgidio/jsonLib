@@ -1,15 +1,13 @@
 import model.*
 import visitors.*
 import org.junit.jupiter.api.Test
-import visitors.ObjectValidator
-import visitors.UniformArrayTypeValidator
 import kotlin.test.*
 
 class JsonVisitorsTest {
 
-    // =============================================
+    // ==========================
     // ObjectValidator Tests
-    // =============================================
+    // ==========================
 
     @Test
     fun `ObjectValidator should detect empty keys in JSON object`() {
@@ -68,9 +66,9 @@ class JsonVisitorsTest {
         assertTrue(errors.any { it.contains("Null value") }, "Should detect null value in nested object")
     }
 
-    // =============================================
+    // ==================================
     // UniformArrayTypeValidator Tests
-    // =============================================
+    // ==================================
 
     @Test
     fun `UniformArrayTypeValidator should detect mixed types in array`() {

@@ -27,7 +27,7 @@ class ObjectValidator : JsonVisitor {
             }
         }
 
-        // Regra 3: Valores válidos
+        // Regra 2: Valores válidos
         obj.properties.values.forEach { value ->
             if (value is JsonNull) {
                 validationErrors.add("Null value found for key: ${obj.properties.filterValues { it == value }.keys.first()}")
