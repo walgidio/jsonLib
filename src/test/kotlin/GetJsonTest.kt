@@ -33,13 +33,13 @@ class Controller {
 class GetJsonTest {
     private val client = OkHttpClient()
     private val app = GetJson(Controller::class)
-    private var port: Int = 8080
+    private var port: Int = 8081
 
     @BeforeAll fun start() = app.start(port)
     @AfterAll fun stop() = app.stop()
 
     private fun get(path: String): String {
-        val request = Request.Builder().url("http://localhost:8080$path").build()
+        val request = Request.Builder().url("http://localhost:$port$path").build()
         client.newCall(request).execute().use { return it.body!!.string() }
     }
 
