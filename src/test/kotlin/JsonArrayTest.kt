@@ -1,4 +1,6 @@
-import model.*
+import jsonlib.model.JsonArray
+import jsonlib.model.JsonNumber
+import jsonlib.model.JsonString
 import org.junit.jupiter.api.Test
 import kotlin.test.*
 

@@ -4,9 +4,9 @@ import getjson.annotations.Mapping
 import getjson.annotations.Param
 import getjson.annotations.Path
 import getjson.core.GetJson
+import jsonlib.model.JsonString
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import model.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.junit.jupiter.api.TestInstance

@@ -1,4 +1,7 @@
-import model.*
+import jsonlib.model.JsonBoolean
+import jsonlib.model.JsonNull
+import jsonlib.model.JsonNumber
+import jsonlib.model.JsonString
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

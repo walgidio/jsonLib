@@ -1,6 +1,6 @@
-package visitors
+package jsonlib.visitors
 
-import model.*
+import jsonlib.model.*
 
 /**
  * Validates that all arrays contain elements of the same type (ignoring nulls)

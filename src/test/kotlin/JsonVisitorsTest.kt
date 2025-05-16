@@ -1,5 +1,9 @@
-import model.*
-import visitors.*
+import jsonlib.Json
+import jsonlib.model.JsonNull
+import jsonlib.model.JsonNumber
+import jsonlib.model.JsonString
+import jsonlib.visitors.ObjectValidator
+import jsonlib.visitors.UniformArrayTypeValidator
 import org.junit.jupiter.api.Test
 import kotlin.test.*
 

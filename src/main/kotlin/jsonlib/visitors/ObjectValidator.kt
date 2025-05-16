@@ -1,5 +1,5 @@
-package visitors
-import model.*
+package jsonlib.visitors
+import jsonlib.model.*
 
 /**
  * Validates JSON objects according to common rules:

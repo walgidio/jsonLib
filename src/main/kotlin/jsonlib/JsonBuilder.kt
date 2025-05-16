@@ -1,4 +1,8 @@
-import model.*
+package jsonlib
+
+import jsonlib.model.JsonArray
+import jsonlib.model.JsonObject
+import jsonlib.model.JsonValue
 
 /**
  * Helper to create new JSON arrays and objects

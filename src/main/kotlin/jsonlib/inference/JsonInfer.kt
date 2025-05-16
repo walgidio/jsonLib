@@ -1,8 +1,4 @@
-import model.*
-import kotlin.reflect.KClass
-import kotlin.reflect.KParameter
-import kotlin.reflect.KProperty
-import kotlin.reflect.full.declaredMemberProperties
+import jsonlib.model.*
 
 import kotlin.reflect.full.primaryConstructor
 

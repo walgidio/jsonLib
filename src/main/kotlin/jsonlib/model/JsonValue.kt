@@ -1,5 +1,5 @@
-package model
-import visitors.*
+package jsonlib.model
+import jsonlib.visitors.JsonVisitor
 
 /**
  * This sealed interface serves as the foundation for the JSON data model and enables:

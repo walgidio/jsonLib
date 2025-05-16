@@ -1,6 +1,6 @@
+import jsonlib.model.*
 import org.junit.jupiter.api.Test
 import kotlin.test.*
-import model.*
 
 // Test Classes
 enum class TestEnum { A, B }

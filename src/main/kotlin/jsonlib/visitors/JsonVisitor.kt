@@ -1,5 +1,6 @@
-package visitors
-import model.*
+package jsonlib.visitors
+import jsonlib.model.*
+
 /**
  * Visitor interface for processing JSON structures.
  *

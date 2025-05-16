@@ -1,5 +1,5 @@
-package model
-import visitors.*
+package jsonlib.model
+import jsonlib.visitors.JsonVisitor
 
 /**
  * Represents a JSON array (ordered collection of values).
