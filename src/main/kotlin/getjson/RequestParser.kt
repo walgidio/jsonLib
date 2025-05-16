@@ -1,4 +1,4 @@
-package getjson.http
+package getjson
 
 import java.io.BufferedReader
 import java.io.InputStream

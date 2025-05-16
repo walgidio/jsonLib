@@ -1,4 +1,4 @@
-package getjson.core
+package getjson
 
 import getjson.annotations.Mapping
 import getjson.annotations.Param
@@ -36,7 +36,6 @@ class ControllerProcessor(private val controllers: List<KClass<*>>) {
          * If matched, returns a map of path variable names to values; otherwise null.
          */
         fun matchAndExtract(path: String): Map<String, String>? {
-            // Split the incoming path and compare against pattern segments
             val reqSegments = if (path.isEmpty()) emptyList() else path.split('/')
             if (reqSegments.size != pathSegments.size) return null  // segment count must match
             val pathVars = mutableMapOf<String, String>()
@@ -61,7 +60,6 @@ class ControllerProcessor(private val controllers: List<KClass<*>>) {
          * Performs type conversion for parameters and returns the result of the call.
          */
         fun invoke(pathVars: Map<String, String>, queryParams: Map<String, String>): Any? {
-            // Prepare arguments for the function call by converting strings to target types
             val args = mutableListOf<Any?>()
             for (paramInfo in paramInfos) {
                 val rawValue = if (paramInfo.source == SourceType.PATH) {
@@ -74,7 +72,6 @@ class ControllerProcessor(private val controllers: List<KClass<*>>) {
                 }
                 args.add(convertValue(rawValue, paramInfo.type))
             }
-            // Invoke the function on the controller instance with the converted arguments
             return function.call(controller, *args.toTypedArray())
         }
     }
@@ -91,39 +88,30 @@ class ControllerProcessor(private val controllers: List<KClass<*>>) {
     /** Source of parameter value (URL path vs query string). */
     enum class SourceType { PATH, QUERY }
 
-    // Processes all given controllers and builds the list of RouteDefinition.
     private fun processControllers(): List<RouteDefinition> {
         val routes = mutableListOf<RouteDefinition>()
         for (controllerClass in controllers) {
-            // Determine base path from class @Mapping (if present)
             val classMapping = controllerClass.findAnnotation<Mapping>()?.value ?: ""
-            // Instantiate the controller (requires a no-arg constructor or default values)
             val controllerInstance = controllerClass.createInstance()
 
-            // Reflect over each function in the controller
             for (func in controllerClass.declaredMemberFunctions) {
                 val mappingAnn = func.findAnnotation<Mapping>() ?: continue  // only consider annotated functions
                 val methodPath = mappingAnn.value
-                // Combine class and method paths (trim to avoid duplicate slashes)
                 val base = classMapping.trim('/')
                 val subPath = methodPath.trim('/')
                 var fullPath = if (base.isNotEmpty()) "$base/$subPath" else subPath
                 fullPath = fullPath.trim('/')  // ensure no trailing slash
 
-                // Parse the full path pattern into segments
                 val segments = if (fullPath.isEmpty()) emptyList() else fullPath.split('/')
                 val pathSegments = segments.map { segment ->
                     if (segment.startsWith("{") && segment.endsWith("}")) {
-                        // Dynamic path variable segment (e.g., {id})
                         val varName = segment.substring(1, segment.length - 1)
                         PathSegment.Variable(varName)
                     } else {
-                        // Static path segment
                         PathSegment.Fixed(segment)
                     }
                 }
 
-                // Build parameter info for this function
                 val paramInfos = mutableListOf<ParamInfo>()
                 for (param in func.parameters) {
                     if (param.kind != KParameter.Kind.VALUE) continue  // skip instance or extension receiver
@@ -133,7 +121,6 @@ class ControllerProcessor(private val controllers: List<KClass<*>>) {
                     if (!isPathParam && !isQueryParam) {
                         throw IllegalStateException("Parameter '$paramName' of function '${func.name}' is not annotated with @Path or @Param")
                     }
-                    // Determine the parameter's expected type class
                     val paramTypeClass = (param.type.classifier as? KClass<*>) ?: throw IllegalStateException("Unknown parameter type for $paramName")
                     if (isPathParam) {
                         paramInfos.add(ParamInfo(paramName, paramTypeClass, SourceType.PATH))
@@ -142,14 +129,12 @@ class ControllerProcessor(private val controllers: List<KClass<*>>) {
                     }
                 }
 
-                // Validate that all path placeholders have corresponding @Path parameters and vice versa
                 val placeholderNames = pathSegments.filterIsInstance<PathSegment.Variable>().map { it.name }.toSet()
                 val pathParamNames = paramInfos.filter { it.source == SourceType.PATH }.map { it.name }.toSet()
                 if (placeholderNames != pathParamNames) {
                     throw IllegalStateException("Path placeholders $placeholderNames do not match @Path params $pathParamNames in function '${func.name}'")
                 }
 
-                // Create and register the route definition
                 routes.add(RouteDefinition(pathSegments, controllerInstance, func, paramInfos))
             }
         }
@@ -174,9 +159,7 @@ private fun convertValue(valueStr: String, targetType: KClass<*>): Any {
             else -> throw IllegalArgumentException("Invalid boolean value: '$valueStr'")
         }
         else -> {
-            // Support enumeration types
             if (targetType.java.isEnum) {
-                // Use Java Enum.valueOf to get the enum constant by name
                 return java.lang.Enum.valueOf(targetType.java as Class<out Enum<*>>, valueStr)
             }
             throw IllegalArgumentException("Unsupported parameter type: $targetType")

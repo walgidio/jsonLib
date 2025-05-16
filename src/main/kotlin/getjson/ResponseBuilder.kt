@@ -1,4 +1,4 @@
-package getjson.http
+package getjson
 
 /**
  * Utility for constructing HTTP response messages.

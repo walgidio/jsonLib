@@ -3,7 +3,6 @@ package getjson
 import getjson.annotations.Mapping
 import getjson.annotations.Param
 import getjson.annotations.Path
-import getjson.core.GetJson
 import jsonlib.model.JsonString
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

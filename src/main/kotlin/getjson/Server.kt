@@ -1,8 +1,6 @@
-package getjson.core
+package getjson
 
-import getjson.core.ControllerProcessor.RouteDefinition
-import getjson.http.RequestParser
-import getjson.http.ResponseBuilder
+import getjson.ControllerProcessor.RouteDefinition
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException

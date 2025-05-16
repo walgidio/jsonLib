@@ -1,4 +1,4 @@
-package getjson.core
+package getjson
 
 import kotlin.reflect.KClass
 
@@ -6,7 +6,6 @@ import kotlin.reflect.KClass
  * Main framework class. Registers controllers and starts the HTTP server.
  */
 class GetJson(vararg controllers: KClass<*>) {
-    // Process controllers to obtain all route definitions
     private val routes = ControllerProcessor(controllers.toList()).routes
     private var server: Server? = null
 
