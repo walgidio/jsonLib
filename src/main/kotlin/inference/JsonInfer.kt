@@ -1,7 +1,7 @@
 import model.*
 import visitors.*
 
-import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * Converts Kotlin objects to JSON model instances using reflection.
@@ -75,11 +75,13 @@ object JsonInfer {
     private fun convertDataClass(obj: Any): JsonObject {
         require(obj::class.isData) { "Only data classes are supported for automatic conversion" }
 
-        val properties = obj::class.memberProperties
-            .associate { prop ->
-                val value = prop.call(obj)
-                prop.name to from(value)
+        val properties = obj::class.primaryConstructor!!
+            .parameters
+            .associate { param ->
+                val name = param.name!!
+                name to from(obj::class.members.first { it.name == name }.call(obj))
             }
-        return JsonObject(properties)
+
+        return JsonObject(LinkedHashMap(properties))
     }
 }

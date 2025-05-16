@@ -6,7 +6,7 @@ import visitors.*
  *
  * @property properties The map of key-value pairs that make up this JSON object
  */
-data class JsonObject(val properties: Map<String, JsonValue> = emptyMap()) : JsonValue {
+data class JsonObject(val properties: Map<String, JsonValue> = LinkedHashMap()) : JsonValue {
     /**
      * Accepts a [JsonVisitor] and triggers visitation of this object.
      *

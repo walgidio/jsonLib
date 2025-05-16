@@ -5,7 +5,7 @@ import model.*
 // Test Classes
 enum class TestEnum { A, B }
 
-data class SimpleData(val name: String, val age: Int)
+data class SimpleData(val name: String, val age: Int, val height: Int)
 
 data class NestedData(val inner: SimpleData)
 
@@ -92,26 +92,18 @@ class JsonInferTest {
 
     @Test
     fun `should convert data class to JsonObject`() {
-        val result = JsonInfer.from(SimpleData("Alice", 30))
+        val result = JsonInfer.from(SimpleData("Alice", 30, 200))
         assertTrue(result is JsonObject)
 
         val jsonString = result.toJsonString()
-        assertTrue(
-            jsonString == """{"name":"Alice","age":30}""" ||
-                    jsonString == """{"age":30,"name":"Alice"}"""
-        )
+        assertEquals("""{"name":"Alice","age":30,"height":200}""", jsonString)
     }
 
     @Test
     fun `should handle nested data classes`() {
-        val result = JsonInfer.from(NestedData(SimpleData("Bob", 25)))
-
-        val expectedPatterns = listOf(
-            """\{"inner":\{"name":"Bob","age":25\}\}""",
-            """\{"inner":\{"age":25,"name":"Bob"\}\}"""
-        ).map { it.toRegex() }
-
-        assertTrue(expectedPatterns.any { it.matches(result.toJsonString()) })
+        val result = JsonInfer.from(NestedData(SimpleData("Bob", 25, 100)))
+        val expected = """{"inner":{"name":"Bob","age":25,"height":100}}"""
+        assertEquals(expected, result.toJsonString())
     }
 
     @Test
