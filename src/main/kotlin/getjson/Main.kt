@@ -1,5 +1,7 @@
-import getjson.Controller
-import getjson.GetJson
+package getjson
+
+import getjson.controllers.Controller
+import getjson.core.GetJson
 
 fun main() {
     val app = GetJson(Controller::class)

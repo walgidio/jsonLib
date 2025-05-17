@@ -1,68 +1,53 @@
-package getjson
-
-import getjson.annotations.Mapping
-import getjson.annotations.Param
-import getjson.annotations.Path
-import jsonlib.model.JsonString
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
+import getjson.controllers.Controller
+import getjson.core.GetJson
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.junit.jupiter.api.TestInstance
-import kotlin.test.Test
-import kotlin.test.assertEquals
-
-@Mapping("api")
-class Controller {
-    @Mapping("ints")
-    fun demo(): List<Int> = listOf(1, 2, 3)
-
-    @Mapping("pair")
-    fun obj(): Pair<String, String> = "um" to "dois"
-
-    @Mapping("path/{pathvar}")
-    fun path(@Path pathvar: String): String = "$pathvar!"
-
-    @Mapping("args")
-    fun args(@Param n: Int, @Param text: String): Map<String, String> =
-        mapOf(text to text.repeat(n))
-}
+import org.junit.jupiter.api.*
+import java.util.concurrent.Executors
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GetJsonTest {
+
+    private val port = 8081
     private val client = OkHttpClient()
-    private val app = GetJson(Controller::class)
-    private var port: Int = 8081
 
-    @BeforeAll fun start() = app.start(port)
-    @AfterAll fun stop() = app.stop()
+    @BeforeAll
+    fun setup() {
+        Executors.newSingleThreadExecutor().submit {
+            GetJson(Controller::class).start(port)
+        }
+        Thread.sleep(1000)
+    }
 
-    private fun get(path: String): String {
-        val request = Request.Builder().url("http://localhost:$port$path").build()
-        client.newCall(request).execute().use { return it.body!!.string() }
+    private fun get(url: String): String {
+        val request = Request.Builder()
+            .url("http://localhost:$port$url")
+            .build()
+        val response = client.newCall(request).execute()
+        return response.body?.string() ?: throw Exception("Sem resposta")
     }
 
     @Test
     fun testInts() {
-        val expected = JsonInfer.from(listOf(1, 2, 3)).toJsonString()
-        assertEquals(expected, get("/api/ints"))
+        val response = get("/api/ints")
+        Assertions.assertEquals("[1,2,3]", response)
     }
 
     @Test
     fun testPair() {
-        val expected = JsonInfer.from(mapOf("first" to "um", "second" to "dois")).toJsonString()
-        assertEquals(expected, get("/api/pair"))
+        val response = get("/api/pair")
+        Assertions.assertEquals("""{"first":"um","second":"dois"}""", response)
     }
 
     @Test
     fun testPath() {
-        assertEquals(JsonString("a!").toJsonString(), get("/api/path/a"))
-        assertEquals(JsonString("b!").toJsonString(), get("/api/path/b"))
+        val response = get("/api/path/ola")
+        Assertions.assertEquals(""""ola!"""", response)
     }
 
     @Test
     fun testArgs() {
-        val expected = JsonInfer.from(mapOf("PA" to "PAPAPA")).toJsonString()
-        assertEquals(expected, get("/api/args?n=3&text=PA"))
+        val response = get("/api/args?n=3&text=PA")
+        Assertions.assertEquals("""{"PA":"PAPAPA"}""", response)
     }
 }
