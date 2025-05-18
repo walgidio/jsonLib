@@ -1,0 +1,64 @@
+@startuml
+skinparam class {
+    BackgroundColor White
+    BorderColor Black
+    ArrowColor #0078D7
+}
+
+interface JsonValue {
+  + accept(visitor: JsonVisitor)
+  + toJsonString(): String
+}
+
+class JsonObject {
+  - properties: LinkedHashMap<String, JsonValue>
+  + filter(predicate): JsonObject
+}
+
+class JsonArray {
+  - elements: List<JsonValue>
+  + filter(predicate): JsonArray
+  + map(transform): JsonArray
+}
+
+abstract class JsonPrimitive {
+  <<abstract>>
+}
+
+class JsonString {
+  - value: String
+}
+
+class JsonNumber {
+  - value: Number
+}
+
+class JsonBoolean {
+  - value: Boolean
+}
+
+class JsonNull {
+  <<singleton>>
+}
+
+JsonValue <|-- JsonObject
+JsonValue <|-- JsonArray
+JsonValue <|-- JsonPrimitive
+JsonPrimitive <|-- JsonString
+JsonPrimitive <|-- JsonNumber
+JsonPrimitive <|-- JsonBoolean
+JsonPrimitive <|-- JsonNull
+
+JsonObject "1" *-- "*" JsonValue : contains
+JsonArray "1" *-- "*" JsonValue : contains
+
+note top of JsonValue
+  <<interface>>
+  Base type for all JSON values
+end note
+
+note bottom of JsonNull
+  Singleton pattern
+  Represents JSON null
+end note
+@enduml
